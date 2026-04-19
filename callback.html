@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OAuth Callback — Leftdoor</title>
+<style>
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    line-height: 1.6;
+    color: #222;
+    max-width: 720px;
+    margin: 3rem auto;
+    padding: 0 1.5rem;
+  }
+  h1 { font-size: 1.75rem; margin-bottom: 0.5rem; }
+  .subtitle { color: #666; margin-bottom: 2rem; }
+  .card {
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 1.5rem;
+    margin: 1rem 0;
+    background: #fafafa;
+  }
+  .label { font-size: 0.85rem; color: #666; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.4rem; }
+  .value {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    font-size: 1.05rem;
+    word-break: break-all;
+    background: #fff;
+    border: 1px solid #e0e0e0;
+    padding: 0.75rem;
+    border-radius: 4px;
+    user-select: all;
+  }
+  button {
+    margin-top: 0.75rem;
+    padding: 0.5rem 1rem;
+    font-size: 0.95rem;
+    border: 1px solid #0366d6;
+    background: #0366d6;
+    color: #fff;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  button:hover { background: #0256c2; }
+  button.copied { background: #28a745; border-color: #28a745; }
+  .error {
+    border-left: 4px solid #d73a49;
+    background: #fff5f5;
+    padding: 1rem 1.25rem;
+    border-radius: 4px;
+    color: #86181d;
+  }
+  .error h2 { margin-top: 0; font-size: 1.1rem; }
+  .hint {
+    margin-top: 2rem;
+    padding: 1rem 1.25rem;
+    background: #fffbea;
+    border-left: 4px solid #f0b429;
+    border-radius: 4px;
+    font-size: 0.95rem;
+  }
+  .hint ol { margin: 0.5rem 0 0 1.25rem; padding: 0; }
+  .hint li { margin-bottom: 0.3rem; }
+  a { color: #0366d6; }
+  footer { margin-top: 3rem; color: #888; font-size: 0.85rem; }
+</style>
+</head>
+<body>
+  <h1>TikTok OAuth Callback</h1>
+  <p class="subtitle">Copy the authorization code below and paste it into the CLI prompt.</p>
+
+  <div id="content">Loading…</div>
+
+  <div class="hint" id="hint" style="display:none">
+    <strong>Next steps:</strong>
+    <ol>
+      <li>Click <em>Copy code</em> above.</li>
+      <li>Return to the terminal running <code>python3 scripts/tiktok_auth.py --init</code>.</li>
+      <li>Paste the code at the <code>Paste the auth code:</code> prompt and press Enter.</li>
+      <li>Verify the <code>state</code> shown here matches the value printed by the CLI.</li>
+    </ol>
+  </div>
+
+  <footer>
+    <p><a href="index.html">Leftdoor home</a></p>
+  </footer>
+
+<script>
+(function() {
+  const params = new URLSearchParams(window.location.search);
+  const code = params.get("code");
+  const state = params.get("state");
+  const error = params.get("error");
+  const errorDesc = params.get("error_description");
+  const content = document.getElementById("content");
+  const hint = document.getElementById("hint");
+
+  function escapeHTML(s) {
+    return String(s).replace(/[&<>"']/g, c => ({
+      "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
+    }[c]));
+  }
+
+  if (error) {
+    content.innerHTML =
+      '<div class="error">' +
+        '<h2>Authorization failed</h2>' +
+        '<p><strong>Error:</strong> ' + escapeHTML(error) + '</p>' +
+        (errorDesc ? '<p><strong>Description:</strong> ' + escapeHTML(errorDesc) + '</p>' : '') +
+        '<p>Return to the terminal, press Enter to abort, and run <code>--init</code> again.</p>' +
+      '</div>';
+    return;
+  }
+
+  if (!code) {
+    content.innerHTML =
+      '<div class="error">' +
+        '<h2>Missing authorization code</h2>' +
+        '<p>No <code>?code=</code> parameter found in the URL. This page should be reached only as a TikTok OAuth redirect target.</p>' +
+      '</div>';
+    return;
+  }
+
+  const codeHTML = escapeHTML(code);
+  const stateHTML = state ? escapeHTML(state) : "(not provided)";
+
+  content.innerHTML =
+    '<div class="card">' +
+      '<div class="label">Authorization code</div>' +
+      '<div class="value" id="code-value">' + codeHTML + '</div>' +
+      '<button id="copy-btn" type="button">Copy code</button>' +
+    '</div>' +
+    '<div class="card">' +
+      '<div class="label">State</div>' +
+      '<div class="value">' + stateHTML + '</div>' +
+    '</div>';
+
+  hint.style.display = "block";
+
+  const btn = document.getElementById("copy-btn");
+  btn.addEventListener("click", async () => {
+    try {
+      await navigator.clipboard.writeText(code);
+      btn.textContent = "Copied ✓";
+      btn.classList.add("copied");
+      setTimeout(() => {
+        btn.textContent = "Copy code";
+        btn.classList.remove("copied");
+      }, 2000);
+    } catch (e) {
+      btn.textContent = "Copy failed — select manually";
+    }
+  });
+})();
+</script>
+</body>
+</html>
