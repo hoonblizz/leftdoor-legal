@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Privacy Policy — Leftdoor</title>
+<style>
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    line-height: 1.6;
+    color: #222;
+    max-width: 720px;
+    margin: 4rem auto;
+    padding: 0 1.5rem;
+  }
+  h1 { font-size: 2rem; margin-bottom: 0.25rem; }
+  h2 { margin-top: 2rem; font-size: 1.25rem; }
+  .updated { color: #666; margin-bottom: 2rem; font-size: 0.9rem; }
+  a { color: #0366d6; }
+  nav { margin-bottom: 2rem; font-size: 0.9rem; }
+  code { background: #f5f5f5; padding: 0.1em 0.3em; border-radius: 3px; }
+  footer { margin-top: 3rem; color: #888; font-size: 0.9rem; }
+</style>
+</head>
+<body>
+  <nav>
+    <a href="index.html">&larr; Home</a> &middot;
+    <a href="terms.html">Terms of Service</a>
+  </nav>
+
+  <h1>Privacy Policy</h1>
+  <p class="updated">Last updated: April 18, 2026</p>
+
+  <h2>1. Scope</h2>
+  <p>Leftdoor ("the App") is a single-user personal automation tool that interacts with the TikTok API on behalf of its operator ("the Owner"). This Privacy Policy describes what data the App handles and how. The App does not run a server, does not collect data from third parties, and is not offered as a service to other users.</p>
+
+  <h2>2. Data the App Handles</h2>
+  <p>When the Owner authorizes the App via TikTok OAuth 2.0, TikTok issues the following credentials, which the App receives and stores locally:</p>
+  <ul>
+    <li><code>access_token</code> — short-lived token authorizing API calls on behalf of the Owner.</li>
+    <li><code>refresh_token</code> — long-lived token used to obtain new access tokens.</li>
+    <li><code>open_id</code> — TikTok's hashed identifier for the Owner's account.</li>
+    <li>Token expiration timestamps.</li>
+  </ul>
+  <p>The App also reads metadata about videos the Owner generates locally (title, description, file size, duration) in order to compose upload requests.</p>
+
+  <h2>3. Where Data Is Stored</h2>
+  <p>All credentials are stored in a single local file on the Owner's machine: <code>.tiktok_tokens.json</code>, with file permissions restricted to the Owner (<code>chmod 600</code>). No credentials, video files, or metadata are transmitted to any server operated by the App's developer. The App has no backend.</p>
+
+  <h2>4. How Data Is Used</h2>
+  <p>Credentials are used solely to:</p>
+  <ul>
+    <li>Authenticate API requests to <code>open.tiktokapis.com</code>.</li>
+    <li>Initialize and complete video uploads via the TikTok Content Posting API.</li>
+    <li>Refresh expired access tokens automatically.</li>
+  </ul>
+
+  <h2>5. Data Sharing</h2>
+  <p>The App does not share any data with third parties. Data flows are limited to:</p>
+  <ul>
+    <li>The Owner's local machine (read/write of token file and video files).</li>
+    <li>TikTok's API endpoints (authenticated requests over HTTPS).</li>
+  </ul>
+
+  <h2>6. Retention</h2>
+  <p>Tokens persist locally until they expire or the Owner deletes <code>.tiktok_tokens.json</code>. The refresh token has a finite lifetime defined by TikTok; once it expires, the App requires re-authorization.</p>
+
+  <h2>7. Your Controls</h2>
+  <p>The Owner can revoke the App's access at any time:</p>
+  <ul>
+    <li>In the TikTok mobile app: <em>Profile &rarr; Settings and privacy &rarr; Security &rarr; Manage app permissions</em>.</li>
+    <li>By deleting the local <code>.tiktok_tokens.json</code> file.</li>
+  </ul>
+  <p>Either action immediately ends the App's ability to act on the Owner's behalf.</p>
+
+  <h2>8. Security</h2>
+  <p>Token files are stored with restricted file system permissions. The App communicates with TikTok over HTTPS. The App does not log credentials.</p>
+
+  <h2>9. Children's Privacy</h2>
+  <p>The App is not directed to children under 13 (or the equivalent minimum age in the Owner's jurisdiction) and does not knowingly process data from children.</p>
+
+  <h2>10. Third-Party Services</h2>
+  <p>The App calls APIs operated by TikTok, Google (Gemini), Fal.ai, and Alibaba (Qwen). These providers have their own privacy practices; refer to their respective policies. The App does not transmit TikTok credentials to any of these services.</p>
+
+  <h2>11. Changes</h2>
+  <p>This Privacy Policy may be updated. The "Last updated" date above will reflect the most recent revision.</p>
+
+  <h2>12. Contact</h2>
+  <p>Questions about this Privacy Policy: <a href="mailto:hoonblizz@gmail.com">hoonblizz@gmail.com</a></p>
+
+  <footer>
+    <p><a href="index.html">Home</a> &middot; <a href="terms.html">Terms of Service</a></p>
+  </footer>
+</body>
+</html>
